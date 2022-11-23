@@ -32,7 +32,8 @@ class PostCreate(PostBase):
     pass
 
 
-# response schema
+# response schemas
+
 class Post(PostBase):
     id: int
     created_at: datetime
@@ -41,6 +42,11 @@ class Post(PostBase):
 
     class Config:
         orm_mode = True
+
+
+class PostOut(BaseModel):
+    Post: Post
+    votes: int
 
 
 class Token(BaseModel):
