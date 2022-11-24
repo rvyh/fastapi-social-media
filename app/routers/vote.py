@@ -1,4 +1,4 @@
-from fastapi import status, HTTPException, Depends, APIRouter
+from fastapi import status, HTTPException, Depends, APIRouter, Response
 from sqlalchemy.orm import Session
 
 from .. import models, schemas, oauth2
@@ -13,6 +13,7 @@ router = APIRouter(
 @router.post("/", status_code=status.HTTP_201_CREATED)
 def create_vote(
         vote: schemas.Vote,
+        response: Response,
         db: Session = Depends(get_db),
         current_user: models.User = Depends(oauth2.get_current_user)
 ):
@@ -39,4 +40,6 @@ def create_vote(
                                 detail="Vote does not exist")
         vote_query.delete(synchronize_session=False)
         db.commit()
+
+        response.status_code = status.HTTP_204_NO_CONTENT
         return {"message": "Successfully deleted vote"}
